@@ -1139,6 +1139,125 @@
             border-radius: 10px;
             margin: 10px 0;
         }
+
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .notification.error {
+            border-left-color: #f44336;
+        }
+
+        .notification.warning {
+            border-left-color: #ff9800;
+        }
+
+        .notification.info {
+            border-left-color: #2196f3;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Smart Analytics Styles */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-card {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Soil Analysis Results */
+        .soil-analysis-results {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .soil-parameter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .soil-parameter:last-child {
+            border-bottom: none;
+        }
+
+        .parameter-name {
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        .parameter-value {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .parameter-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-optimal {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-warning {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .status-critical {
+            background: #ffebee;
+            color: #f44336;
+        }
     </style>
 </head>
 <body>
@@ -1149,6 +1268,9 @@
             <div>Processing...</div>
         </div>
     </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notification-container"></div>
 
     <!-- Header Section -->
     <header>
@@ -1505,6 +1627,33 @@
                         </div>
                     </div>
                 </div>
+                <div class="soil-analysis-results" id="soil-analysis-results">
+                    <h3>Soil Analysis Results</h3>
+                    <div class="soil-parameter">
+                        <div class="parameter-name">Soil Moisture</div>
+                        <div class="parameter-value">65%</div>
+                        <div class="parameter-status status-optimal">Optimal</div>
+                    </div>
+                    <div class="soil-parameter">
+                        <div class="parameter-name">Soil pH</div>
+                        <div class="parameter-value">6.8</div>
+                        <div class="parameter-status status-optimal">Neutral</div>
+                    </div>
+                    <div class="soil-parameter">
+                        <div class="parameter-name">Nutrient Level</div>
+                        <div class="parameter-value">Medium</div>
+                        <div class="parameter-status status-warning">Needs Improvement</div>
+                    </div>
+                    <div class="soil-parameter">
+                        <div class="parameter-name">Organic Matter</div>
+                        <div class="parameter-value">3.2%</div>
+                        <div class="parameter-status status-optimal">Good</div>
+                    </div>
+                    <div class="alert alert-info" style="margin-top: 15px;">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Recommendations:</strong> Add organic compost to improve nutrient levels. Current pH is optimal for most crops.
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1587,6 +1736,60 @@
                 
                 <div class="remedy-options" id="disease-details" style="display: none;">
                     <!-- Disease details populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="analytics-grid" id="smart-analytics-content" style="display: none;">
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <div class="card-title">Growth Rate Analysis</div>
+                        <div class="card-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="growth-chart"></canvas>
+                    </div>
+                    <p>Track the growth rates of your crops over time to optimize planting schedules.</p>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <div class="card-title">Disease Trends</div>
+                        <div class="card-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="disease-trend-chart"></canvas>
+                    </div>
+                    <p>Monitor disease patterns to implement preventive measures effectively.</p>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <div class="card-title">Expense Analysis</div>
+                        <div class="card-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="expense-chart"></canvas>
+                    </div>
+                    <p>Analyze your farming expenses to identify cost-saving opportunities.</p>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <div class="card-title">Profit Analytics</div>
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="profit-analytics-chart"></canvas>
+                    </div>
+                    <p>Track profit trends across different crops and seasons.</p>
                 </div>
             </div>
             
@@ -1994,7 +2197,7 @@
                 </div>
             </div>
             <div class="copyright">
-                &copy; 2023 AgriSmart Adviser. <span data-translate="all_rights_reserved">All rights reserved.</span>
+                &copy; 2023 AgriSmart Adviser.
             </div>
         </div>
     </footer>
@@ -2026,8 +2229,8 @@
                     <div class="social-login">
                         <p data-translate="or_continue_with">Or continue with</p>
                         <div class="social-buttons">
-                            <button class="btn btn-social google" data-translate="google">Google</button>
-                            <button class="btn btn-social facebook" data-translate="facebook">Facebook</button>
+                            <button class="btn btn-social google" id="google-login" data-translate="google">Google</button>
+                            <button class="btn btn-social facebook" id="facebook-login" data-translate="facebook">Facebook</button>
                         </div>
                     </div>
                 </div>
@@ -2109,7 +2312,7 @@
                                 application: 'Spray early morning or late evening. Cover both sides of leaves. Repeat every 7-10 days.',
                                 benefits: 'Controls fungal diseases, repels insects, acts as foliar fertilizer',
                                 crops: 'Wheat, Rice, Corn, Vegetables',
-                                video: 'https://www.youtube.com/embed/example1'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2121,7 +2324,7 @@
                                 application: 'Spray on affected plants weekly. Best applied in cool weather.',
                                 benefits: 'Antifungal, antibacterial, insect repellent',
                                 crops: 'All vegetables, Fruits, Grains',
-                                video: 'https://www.youtube.com/embed/example2'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2133,7 +2336,7 @@
                                 application: 'Spray every 5-7 days. Avoid spraying in direct sunlight.',
                                 benefits: 'Controls powdery mildew, leaf spot, rust diseases',
                                 crops: 'Cucumbers, Squash, Roses, Grapes',
-                                video: 'https://www.youtube.com/embed/example3'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2145,7 +2348,7 @@
                                 application: 'Spray every 2 weeks during growing season.',
                                 benefits: 'Strengthens cell walls, prevents fungal attacks',
                                 crops: 'Tomatoes, Potatoes, Fruit trees',
-                                video: 'https://www.youtube.com/embed/example4'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2157,67 +2360,7 @@
                                 application: 'Spray on leaves or use as soil drench every 2 weeks.',
                                 benefits: 'Improves soil health, enhances plant immunity',
                                 crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/example5'
-                            }
-                        },
-                        { 
-                            name: 'Chamomile Tea', 
-                            description: 'Antifungal spray that prevents damping off in seedlings.',
-                            details: {
-                                ingredients: ['Chamomile flowers (2 tablespoons)', 'Water (1 cup)'],
-                                preparation: 'Steep chamomile in hot water for 15 minutes. Cool and strain.',
-                                application: 'Spray on seedlings and soil surface.',
-                                benefits: 'Prevents fungal diseases in seedlings',
-                                crops: 'Seedlings, Young plants',
-                                video: 'https://www.youtube.com/embed/example6'
-                            }
-                        },
-                        { 
-                            name: 'Cinnamon Powder', 
-                            description: 'Natural antifungal for soil-borne diseases.',
-                            details: {
-                                ingredients: ['Cinnamon powder'],
-                                preparation: 'Use directly as powder or mix with water (2 tsp per cup)',
-                                application: 'Dust on soil surface or spray cinnamon water.',
-                                benefits: 'Controls damping off, root rot',
-                                crops: 'Seedlings, Indoor plants',
-                                video: 'https://www.youtube.com/embed/example7'
-                            }
-                        },
-                        { 
-                            name: 'Milk Spray', 
-                            description: 'Controls powdery mildew and boosts plant health.',
-                            details: {
-                                ingredients: ['Milk (1 part)', 'Water (9 parts)'],
-                                preparation: 'Mix milk with water. No need to boil.',
-                                application: 'Spray once a week in morning hours.',
-                                benefits: 'Controls mildew, provides calcium',
-                                crops: 'Squash, Cucumbers, Zucchini',
-                                video: 'https://www.youtube.com/embed/example8'
-                            }
-                        },
-                        { 
-                            name: 'Aspirin Solution', 
-                            description: 'Boosts plant immune system against diseases.',
-                            details: {
-                                ingredients: ['Aspirin tablets (2)', 'Water (1 gallon)'],
-                                preparation: 'Crush aspirin and dissolve in water.',
-                                application: 'Spray every 2-3 weeks during growing season.',
-                                benefits: 'Activates plant defense mechanisms',
-                                crops: 'Tomatoes, Peppers, Eggplants',
-                                video: 'https://www.youtube.com/embed/example9'
-                            }
-                        },
-                        { 
-                            name: 'Seaweed Extract', 
-                            description: 'Rich in micronutrients that enhance disease resistance.',
-                            details: {
-                                ingredients: ['Seaweed extract (as per package)'],
-                                preparation: 'Dilute according to package instructions.',
-                                application: 'Foliar spray every 2-4 weeks.',
-                                benefits: 'Improves stress tolerance, disease resistance',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/example10'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         }
                     ],
@@ -2231,7 +2374,7 @@
                                 application: 'Mix according to package. Spray when pests are small.',
                                 safety: 'Safe for humans, pets, and beneficial insects',
                                 crops: 'Cabbage, Tomatoes, Corn, Cotton',
-                                video: 'https://www.youtube.com/embed/bt1'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2243,7 +2386,7 @@
                                 application: 'Dilute as per instructions. Spray every 7-10 days.',
                                 safety: 'Low toxicity to beneficial insects',
                                 crops: 'All vegetables, Fruits, Ornamentals',
-                                video: 'https://www.youtube.com/embed/bt2'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2255,91 +2398,7 @@
                                 application: 'Spray in evening to protect bees.',
                                 safety: 'Toxic to bees when wet',
                                 crops: 'Fruits, Vegetables, Ornamentals',
-                                video: 'https://www.youtube.com/embed/bt3'
-                            }
-                        },
-                        { 
-                            name: 'Pyrethrin', 
-                            description: 'Extracted from chrysanthemum flowers.',
-                            details: {
-                                type: 'Botanical insecticide',
-                                target: 'Flying insects, Beetles, Aphids',
-                                application: 'Contact spray. Apply when pests are visible.',
-                                safety: 'Toxic to fish and bees',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bt4'
-                            }
-                        },
-                        { 
-                            name: 'Beauveria Bassiana', 
-                            description: 'Fungal biopesticide for sucking pests.',
-                            details: {
-                                type: 'Fungal biopesticide',
-                                target: 'Whiteflies, Thrips, Aphids',
-                                application: 'Spray under leaves where pests hide.',
-                                safety: 'Safe for beneficial insects',
-                                crops: 'Greenhouse crops, Vegetables',
-                                video: 'https://www.youtube.com/embed/bt5'
-                            }
-                        },
-                        { 
-                            name: 'Metarhizium', 
-                            description: 'Fungal biopesticide for soil pests.',
-                            details: {
-                                type: 'Fungal biopesticide',
-                                target: 'Root grubs, Weevils, Soil insects',
-                                application: 'Mix with soil or apply as drench.',
-                                safety: 'Safe for plants and environment',
-                                crops: 'Turf, Potatoes, Carrots',
-                                video: 'https://www.youtube.com/embed/bt6'
-                            }
-                        },
-                        { 
-                            name: 'Verticillium Lecanii', 
-                            description: 'Fungal control for aphids and whiteflies.',
-                            details: {
-                                type: 'Fungal biopesticide',
-                                target: 'Aphids, Whiteflies, Scale insects',
-                                application: 'Spray in humid conditions for best results.',
-                                safety: 'Safe for pollinators',
-                                crops: 'Citrus, Cotton, Vegetables',
-                                video: 'https://www.youtube.com/embed/bt7'
-                            }
-                        },
-                        { 
-                            name: 'Trichoderma', 
-                            description: 'Fungal antagonist for soil diseases.',
-                            details: {
-                                type: 'Fungal biopesticide',
-                                target: 'Root rot, Damping off, Wilt diseases',
-                                application: 'Soil application or seed treatment.',
-                                safety: 'Completely safe for humans',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bt8'
-                            }
-                        },
-                        { 
-                            name: 'Pseudomonas Fluorescens', 
-                            description: 'Bacterial control for fungal diseases.',
-                            details: {
-                                type: 'Bacterial biopesticide',
-                                target: 'Root rot, Blight, Wilt diseases',
-                                application: 'Soil drench or seed treatment.',
-                                safety: 'Environmentally friendly',
-                                crops: 'Rice, Wheat, Vegetables',
-                                video: 'https://www.youtube.com/embed/bt9'
-                            }
-                        },
-                        { 
-                            name: 'Nuclear Polyhedrosis Virus', 
-                            description: 'Viral biopesticide for specific caterpillars.',
-                            details: {
-                                type: 'Viral biopesticide',
-                                target: 'Helicoverpa, Spodoptera caterpillars',
-                                application: 'Spray when caterpillar population is low.',
-                                safety: 'Highly specific to target pests',
-                                crops: 'Cotton, Tomatoes, Chickpeas',
-                                video: 'https://www.youtube.com/embed/bt10'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         }
                     ],
@@ -2353,7 +2412,7 @@
                                 application: 'Mix 2-3 kg per square meter in soil.',
                                 benefits: 'Improves soil structure, water retention',
                                 crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bf1'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2365,7 +2424,7 @@
                                 application: 'Seed treatment before sowing.',
                                 benefits: 'Reduces nitrogen fertilizer requirement',
                                 crops: 'Pulses, Soybean, Groundnut',
-                                video: 'https://www.youtube.com/embed/bf2'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         },
                         { 
@@ -2377,91 +2436,7 @@
                                 application: 'Seed treatment or soil application.',
                                 benefits: 'Works for non-legume crops',
                                 crops: 'Wheat, Rice, Vegetables',
-                                video: 'https://www.youtube.com/embed/bf3'
-                            }
-                        },
-                        { 
-                            name: 'Phosphate Solubilizing Bacteria', 
-                            description: 'Makes soil phosphorus available to plants.',
-                            details: {
-                                nutrients: 'Mobilizes insoluble phosphorus',
-                                preparation: 'Carrier-based bacterial culture',
-                                application: 'Seed treatment or soil application.',
-                                benefits: 'Reduces phosphate fertilizer need',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bf4'
-                            }
-                        },
-                        { 
-                            name: 'Potash Mobilizing Bacteria', 
-                            description: 'Makes potassium available to plants.',
-                            details: {
-                                nutrients: 'Mobilizes soil potassium',
-                                preparation: 'Carrier-based bacterial culture',
-                                application: 'Soil application with organic manure.',
-                                benefits: 'Improves potassium availability',
-                                crops: 'Banana, Sugarcane, Potatoes',
-                                video: 'https://www.youtube.com/embed/bf5'
-                            }
-                        },
-                        { 
-                            name: 'Azospirillum', 
-                            description: 'Nitrogen-fixer for cereal crops.',
-                            details: {
-                                nutrients: 'Fixes 20-40 kg nitrogen per hectare',
-                                preparation: 'Carrier-based culture',
-                                application: 'Seed treatment for best results.',
-                                benefits: 'Promotes root growth',
-                                crops: 'Maize, Wheat, Millets',
-                                video: 'https://www.youtube.com/embed/bf6'
-                            }
-                        },
-                        { 
-                            name: 'Mycorrhizal Fungi', 
-                            description: 'Fungal symbiont that enhances nutrient uptake.',
-                            details: {
-                                nutrients: 'Improves phosphorus and water uptake',
-                                preparation: 'Spore-based formulation',
-                                application: 'Root dip or soil application.',
-                                benefits: 'Enhances drought tolerance',
-                                crops: 'Fruit trees, Vegetables, Field crops',
-                                video: 'https://www.youtube.com/embed/bf7'
-                            }
-                        },
-                        { 
-                            name: 'Seaweed Extract', 
-                            description: 'Liquid fertilizer from seaweeds.',
-                            details: {
-                                nutrients: 'Rich in micronutrients and growth hormones',
-                                preparation: 'Liquid extract from seaweeds',
-                                application: 'Foliar spray (2-3 ml per liter).',
-                                benefits: 'Improves stress tolerance and yield',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bf8'
-                            }
-                        },
-                        { 
-                            name: 'Panchagavya', 
-                            description: 'Traditional Indian biofertilizer from cow products.',
-                            details: {
-                                nutrients: 'Complete organic nutrition',
-                                preparation: 'Fermented mixture of 5 cow products',
-                                application: '3% solution as foliar spray.',
-                                benefits: 'Improves soil health and plant immunity',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bf9'
-                            }
-                        },
-                        { 
-                            name: 'Jeevamrutha', 
-                            description: 'Indian traditional microbial culture.',
-                            details: {
-                                nutrients: 'Rich in beneficial microorganisms',
-                                preparation: 'Fermented mixture of cow dung, urine, flour',
-                                application: 'Soil application every 15 days.',
-                                benefits: 'Enhances soil biological activity',
-                                crops: 'All crops',
-                                video: 'https://www.youtube.com/embed/bf10'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
                         }
                     ]
@@ -2477,27 +2452,37 @@
                                 application: 'Spray every 5-7 days. Apply in morning.',
                                 benefits: 'Controls mildew, provides nutrients',
                                 crops: 'Cucumbers, Squash, Grapes, Roses',
-                                video: 'https://www.youtube.com/embed/pm1'
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
                             }
-                        },
-                        // Add 9 more remedies for each disease...
+                        }
                     ],
                     bioPesticides: [
-                        // Add 10 bio pesticides...
+                        { 
+                            name: 'Sulfur Spray', 
+                            description: 'Effective fungicide for powdery mildew control.',
+                            details: {
+                                type: 'Mineral fungicide',
+                                target: 'Powdery mildew, Rust, Scab',
+                                application: 'Apply as dust or spray in cool weather.',
+                                safety: 'Avoid application in hot weather',
+                                crops: 'Grapes, Apples, Vegetables',
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+                            }
+                        }
                     ],
                     bioFertilizers: [
-                        // Add 10 bio fertilizers...
-                    ]
-                },
-                'Bacterial Blight': {
-                    natural: [
-                        // Add 10 natural remedies...
-                    ],
-                    bioPesticides: [
-                        // Add 10 bio pesticides...
-                    ],
-                    bioFertilizers: [
-                        // Add 10 bio fertilizers...
+                        { 
+                            name: 'Seaweed Extract', 
+                            description: 'Rich in micronutrients that enhance disease resistance.',
+                            details: {
+                                nutrients: 'Rich in micronutrients and growth hormones',
+                                preparation: 'Liquid extract from seaweeds',
+                                application: 'Foliar spray (2-3 ml per liter).',
+                                benefits: 'Improves stress tolerance and yield',
+                                crops: 'All crops',
+                                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+                            }
+                        }
                     ]
                 }
             },
@@ -2522,86 +2507,6 @@
                     severity: 'Medium',
                     season: 'Warm dry weather',
                     image: 'https://via.placeholder.com/400x300?text=Powdery+Mildew+Image'
-                },
-                'Bacterial Blight': {
-                    symptoms: 'Water-soaked lesions turning brown, leaf wilting, stem cankers',
-                    causes: 'Bacterial infection (Xanthomonas), rain splash, contaminated tools',
-                    prevention: 'Use disease-free seeds, crop rotation, avoid overhead irrigation',
-                    treatment: 'Copper-based sprays, remove infected plants',
-                    affectedCrops: ['Rice', 'Cotton', 'Soybean', 'Tomato'],
-                    severity: 'High',
-                    season: 'Warm wet weather',
-                    image: 'https://via.placeholder.com/400x300?text=Bacterial+Blight+Image'
-                },
-                'Downy Mildew': {
-                    symptoms: 'Yellow spots on upper leaves, white fluffy growth underneath',
-                    causes: 'Fungal-like organism, cool moist conditions',
-                    prevention: 'Good drainage, resistant varieties, proper spacing',
-                    treatment: 'Copper fungicides, improve air circulation',
-                    affectedCrops: ['Grapes', 'Lettuce', 'Cucumbers', 'Onions'],
-                    severity: 'High',
-                    season: 'Cool moist weather',
-                    image: 'https://via.placeholder.com/400x300?text=Downy+Mildew+Image'
-                },
-                'Early Blight': {
-                    symptoms: 'Dark spots with concentric rings, yellowing leaves, defoliation',
-                    causes: 'Fungal infection (Alternaria), warm humid weather',
-                    prevention: 'Crop rotation, proper spacing, remove plant debris',
-                    treatment: 'Copper fungicides, chlorothalonil sprays',
-                    affectedCrops: ['Tomatoes', 'Potatoes', 'Eggplants', 'Peppers'],
-                    severity: 'Medium',
-                    season: 'Warm humid weather',
-                    image: 'https://via.placeholder.com/400x300?text=Early+Blight+Image'
-                },
-                'Late Blight': {
-                    symptoms: 'Water-soaked lesions, white fungal growth, rapid plant death',
-                    causes: 'Fungal infection (Phytophthora), cool wet conditions',
-                    prevention: 'Resistant varieties, proper spacing, avoid overhead irrigation',
-                    treatment: 'Copper-based fungicides, remove infected plants',
-                    affectedCrops: ['Potatoes', 'Tomatoes'],
-                    severity: 'Very High',
-                    season: 'Cool wet weather',
-                    image: 'https://via.placeholder.com/400x300?text=Late+Blight+Image'
-                },
-                'Fusarium Wilt': {
-                    symptoms: 'Yellowing leaves, wilting, vascular discoloration',
-                    causes: 'Soil-borne fungus, warm soil temperatures',
-                    prevention: 'Resistant varieties, soil solarization, crop rotation',
-                    treatment: 'Soil fumigation, biological controls',
-                    affectedCrops: ['Tomatoes', 'Bananas', 'Cotton', 'Cucumbers'],
-                    severity: 'High',
-                    season: 'Warm weather',
-                    image: 'https://via.placeholder.com/400x300?text=Fusarium+Wilt+Image'
-                },
-                'Verticillium Wilt': {
-                    symptoms: 'V-shaped yellowing, wilting, vascular browning',
-                    causes: 'Soil-borne fungus, contaminated soil',
-                    prevention: 'Resistant varieties, soil sterilization, crop rotation',
-                    treatment: 'Soil fumigation, remove infected plants',
-                    affectedCrops: ['Tomatoes', 'Potatoes', 'Eggplants', 'Strawberries'],
-                    severity: 'High',
-                    season: 'Moderate temperatures',
-                    image: 'https://via.placeholder.com/400x300?text=Verticillium+Wilt+Image'
-                },
-                'Anthracnose': {
-                    symptoms: 'Dark sunken spots on fruits and leaves, defoliation',
-                    causes: 'Fungal infection, rain splash, high humidity',
-                    prevention: 'Proper spacing, remove plant debris, resistant varieties',
-                    treatment: 'Copper fungicides, proper sanitation',
-                    affectedCrops: ['Mango', 'Beans', 'Tomatoes', 'Cucumbers'],
-                    severity: 'Medium',
-                    season: 'Wet weather',
-                    image: 'https://via.placeholder.com/400x300?text=Anthracnose+Image'
-                },
-                'Root Rot': {
-                    symptoms: 'Wilting, yellowing leaves, root discoloration and decay',
-                    causes: 'Soil-borne fungi, waterlogged soil, poor drainage',
-                    prevention: 'Good drainage, proper watering, healthy soil',
-                    treatment: 'Soil drenches, improve drainage, biological controls',
-                    affectedCrops: ['All crops in waterlogged conditions'],
-                    severity: 'High',
-                    season: 'Wet conditions',
-                    image: 'https://via.placeholder.com/400x300?text=Root+Rot+Image'
                 }
             },
             // Market price data based on location
@@ -2611,36 +2516,7 @@
                     rice: { current: 2800, trend: 'stable', change_percentage: 0 },
                     corn: { current: 1800, trend: 'down', change_percentage: -3 },
                     soybean: { current: 4200, trend: 'up', change_percentage: 8 },
-                    cotton: { current: 5800, trend: 'stable', change_percentage: 2 },
-                    sugarcane: { current: 3200, trend: 'up', change_percentage: 4 },
-                    potato: { current: 1200, trend: 'down', change_percentage: -5 },
-                    tomato: { current: 1800, trend: 'up', change_percentage: 12 },
-                    onion: { current: 2200, trend: 'stable', change_percentage: 0 },
-                    chilli: { current: 8500, trend: 'up', change_percentage: 15 }
-                },
-                'Maharashtra, India': {
-                    wheat: { current: 2200, trend: 'stable', change_percentage: 2 },
-                    rice: { current: 2700, trend: 'down', change_percentage: -2 },
-                    corn: { current: 1900, trend: 'up', change_percentage: 3 },
-                    soybean: { current: 4300, trend: 'stable', change_percentage: 1 },
-                    cotton: { current: 6000, trend: 'up', change_percentage: 5 },
-                    sugarcane: { current: 3100, trend: 'stable', change_percentage: 0 },
-                    potato: { current: 1300, trend: 'up', change_percentage: 8 },
-                    tomato: { current: 2000, trend: 'down', change_percentage: -5 },
-                    onion: { current: 2500, trend: 'up', change_percentage: 10 },
-                    chilli: { current: 9000, trend: 'stable', change_percentage: 2 }
-                },
-                'Karnataka, India': {
-                    wheat: { current: 2150, trend: 'up', change_percentage: 4 },
-                    rice: { current: 2900, trend: 'stable', change_percentage: 1 },
-                    corn: { current: 1850, trend: 'down', change_percentage: -2 },
-                    soybean: { current: 4100, trend: 'up', change_percentage: 6 },
-                    cotton: { current: 5900, trend: 'stable', change_percentage: 1 },
-                    sugarcane: { current: 3150, trend: 'up', change_percentage: 3 },
-                    potato: { current: 1250, trend: 'stable', change_percentage: 0 },
-                    tomato: { current: 1900, trend: 'up', change_percentage: 8 },
-                    onion: { current: 2300, trend: 'down', change_percentage: -3 },
-                    chilli: { current: 8800, trend: 'up', change_percentage: 12 }
+                    cotton: { current: 5800, trend: 'stable', change_percentage: 2 }
                 }
             },
             // Crop recommendations based on location and conditions
@@ -2654,16 +2530,6 @@
                         wheat: ['Legumes', 'Oilseeds', 'Pulses'],
                         rice: ['Wheat', 'Mustard', 'Vegetables'],
                         corn: ['Soybean', 'Wheat', 'Pulses']
-                    }
-                },
-                'Maharashtra, India': {
-                    low_ph: ['Pineapple', 'Cassava', 'Sweet potato'],
-                    high_ph: ['Cabbage', 'Broccoli', 'Spinach'],
-                    low_water: ['Pearl millet', 'Sorghum', 'Groundnut'],
-                    high_water: ['Rice', 'Sugarcane', 'Banana'],
-                    crop_rotation: {
-                        cotton: ['Soybean', 'Wheat', 'Pulses'],
-                        sugarcane: ['Legumes', 'Oilseeds', 'Vegetables']
                     }
                 }
             },
@@ -2686,7 +2552,6 @@
                     'start_camera': 'Start Camera',
                     'capture_photo': 'Capture Photo',
                     'upload_photo': 'Upload Photo',
-                    'ar_mode': 'AR Mode',
                     'analyze_photo': 'Analyze Photo',
                     'detection_results': 'Detection Results:',
                     'confidence': 'Confidence:',
@@ -2697,7 +2562,6 @@
                     'market_profit_tools': 'Market & Profit Tools',
                     'market_price_prediction': 'Market Price Prediction',
                     'market_price_desc': 'Get real-time market prices for your crops based on location and demand.',
-                    'enter_crop_name': 'Enter crop name',
                     'get_price_prediction': 'Get Price Prediction',
                     'crop_planning_advisor': 'Crop Planning Advisor',
                     'crop_planning_desc': 'Get AI-powered suggestions for the best next crop based on your soil and previous crops.',
@@ -2750,7 +2614,6 @@
                     'natural_solution_search_desc': 'Browse all natural solutions, bio pesticides, and bio fertilizers.',
                     'all': 'All',
                     'search_disease': 'Search for a disease...',
-                    'weather_forecast': 'Weather Forecast',
                     'reports_analytics': 'Reports & Analytics',
                     'reports_desc': 'Generate detailed reports and analyze your farm\'s performance.',
                     'sustainability_index': 'Sustainability Index',
@@ -2773,7 +2636,6 @@
                     'save_location': 'Save Location',
                     'footer_desc': 'Smart farm management powered by AI and IoT technology to help farmers maximize yields and profits sustainably.',
                     'quick_links': 'Quick Links',
-                    'all_rights_reserved': 'All rights reserved.',
                     'chatbot_welcome': 'Hello! I\'m your AgriSmart Adviser assistant. How can I help you with your farming today?',
                     'type_message': 'Type your message...',
                     'sign_in': 'Sign In',
@@ -2816,8 +2678,6 @@
                     'description': 'Description',
                     'preparation_instructions': 'Preparation Instructions',
                     'application_instructions': 'Application Instructions',
-                    'upload_documentation': 'Upload Documentation (PDF/DOC)',
-                    'click_to_upload': 'Click to upload documentation',
                     'upload_video': 'Upload Video Tutorial',
                     'click_to_upload_video': 'Click to upload video',
                     'save_remedy': 'Save Remedy',
@@ -2842,7 +2702,6 @@
                     'start_camera': 'कैमरा शुरू करें',
                     'capture_photo': 'फोटो खींचें',
                     'upload_photo': 'फोटो अपलोड करें',
-                    'ar_mode': 'एआर मोड',
                     'analyze_photo': 'फोटो विश्लेषण करें',
                     'detection_results': 'जांच परिणाम:',
                     'confidence': 'विश्वास:',
@@ -2853,7 +2712,6 @@
                     'market_profit_tools': 'बाजार और लाभ उपकरण',
                     'market_price_prediction': 'बाजार मूल्य भविष्यवाणी',
                     'market_price_desc': 'स्थान और मांग के आधार पर अपनी फसलों के लिए रीयल-टाइम बाजार मूल्य प्राप्त करें।',
-                    'enter_crop_name': 'फसल का नाम दर्ज करें',
                     'get_price_prediction': 'मूल्य भविष्यवाणी प्राप्त करें',
                     'crop_planning_advisor': 'फसल योजना सलाहकार',
                     'crop_planning_desc': 'अपनी मिट्टी और पिछली फसलों के आधार पर अगली सर्वोत्तम फसल के लिए एआई-संचालित सुझाव प्राप्त करें।',
@@ -2906,7 +2764,6 @@
                     'natural_solution_search_desc': 'सभी प्राकृतिक समाधान, जैव कीटनाशक और जैव उर्वरक ब्राउज़ करें।',
                     'all': 'सभी',
                     'search_disease': 'रोग खोजें...',
-                    'weather_forecast': 'मौसम पूर्वानुमान',
                     'reports_analytics': 'रिपोर्ट और विश्लेषण',
                     'reports_desc': 'विस्तृत रिपोर्ट तैयार करें और अपने खेत के प्रदर्शन का विश्लेषण करें।',
                     'sustainability_index': 'सस्टेनेबिलिटी इंडेक्स',
@@ -2929,7 +2786,6 @@
                     'save_location': 'स्थान सहेजें',
                     'footer_desc': 'किसानों को उपज और लाभ को अधिकतम करने में मदद करने के लिए एआई और आईओटी तकनीक द्वारा संचालित स्मार्ट फार्म प्रबंधन।',
                     'quick_links': 'त्वरित लिंक',
-                    'all_rights_reserved': 'सर्वाधिकार सुरक्षित।',
                     'chatbot_welcome': 'नमस्ते! मैं आपका एग्रीस्मार्ट एडवाइजर सहायक हूं। आज मैं आपकी खेती में कैसे मदद कर सकता हूं?',
                     'type_message': 'अपना संदेश टाइप करें...',
                     'sign_in': 'साइन इन',
@@ -2972,8 +2828,6 @@
                     'description': 'विवरण',
                     'preparation_instructions': 'तैयारी के निर्देश',
                     'application_instructions': 'आवेदन निर्देश',
-                    'upload_documentation': 'दस्तावेज़ अपलोड करें (PDF/DOC)',
-                    'click_to_upload': 'दस्तावेज़ अपलोड करने के लिए क्लिक करें',
                     'upload_video': 'वीडियो ट्यूटोरियल अपलोड करें',
                     'click_to_upload_video': 'वीडियो अपलोड करने के लिए क्लिक करें',
                     'save_remedy': 'उपचार सहेजें',
@@ -3015,7 +2869,6 @@
             checkAuthStatus();
             
             // Load settings
-            loadSettings();
 
             console.log('AgriSmart Adviser initialized successfully!');
         }
@@ -3137,6 +2990,7 @@
             document.getElementById('natural-solutions-db').addEventListener('click', function() {
                 document.getElementById('natural-solutions-content').style.display = 'block';
                 document.getElementById('crop-disease-content').style.display = 'none';
+                document.getElementById('smart-analytics-content').style.display = 'none';
                 document.getElementById('add-remedy-section').style.display = 'none';
                 displayAllNaturalSolutions();
             });
@@ -3144,8 +2998,16 @@
             document.getElementById('crop-disease-library').addEventListener('click', function() {
                 document.getElementById('crop-disease-content').style.display = 'block';
                 document.getElementById('natural-solutions-content').style.display = 'none';
+                document.getElementById('smart-analytics-content').style.display = 'none';
                 document.getElementById('add-remedy-section').style.display = 'none';
                 displayCropDiseases();
+            });
+
+            document.getElementById('smart-analytics-db').addEventListener('click', function() {
+                document.getElementById('smart-analytics-content').style.display = 'grid';
+                document.getElementById('natural-solutions-content').style.display = 'none';
+                document.getElementById('crop-disease-content').style.display = 'none';
+                document.getElementById('add-remedy-section').style.display = 'none';
             });
 
             // Add Remedy Feature
@@ -3153,6 +3015,7 @@
                 document.getElementById('add-remedy-section').style.display = 'block';
                 document.getElementById('natural-solutions-content').style.display = 'none';
                 document.getElementById('crop-disease-content').style.display = 'none';
+                document.getElementById('smart-analytics-content').style.display = 'none';
             });
 
             // Remedy Type Buttons
@@ -3310,6 +3173,10 @@
             });
             document.getElementById('login-btn').addEventListener('click', loginUser);
             document.getElementById('register-btn').addEventListener('click', registerUser);
+            
+            // Social login buttons
+            document.getElementById('google-login').addEventListener('click', googleLogin);
+            document.getElementById('facebook-login').addEventListener('click', facebookLogin);
 
             // Settings
             document.getElementById('save-settings').addEventListener('click', saveSettings);
@@ -3478,20 +3345,20 @@
             // Get remedies for the detected disease
             const remedies = appData.remedies[disease] || appData.remedies['Leaf Rust'];
             
-            // Display first 3 natural remedies
-            remedies.natural.slice(0, 3).forEach(remedy => {
+            // Display natural remedies
+            remedies.natural.forEach(remedy => {
                 const remedyCard = createRemedyCard(remedy, 'natural');
                 naturalRemediesContainer.appendChild(remedyCard);
             });
             
-            // Display first 3 bio pesticides
-            remedies.bioPesticides.slice(0, 3).forEach(pesticide => {
+            // Display bio pesticides
+            remedies.bioPesticides.forEach(pesticide => {
                 const pesticideCard = createRemedyCard(pesticide, 'bioPesticide');
                 bioPesticidesContainer.appendChild(pesticideCard);
             });
             
-            // Display first 3 bio fertilizers
-            remedies.bioFertilizers.slice(0, 3).forEach(fertilizer => {
+            // Display bio fertilizers
+            remedies.bioFertilizers.forEach(fertilizer => {
                 const fertilizerCard = createRemedyCard(fertilizer, 'bioFertilizer');
                 bioFertilizersContainer.appendChild(fertilizerCard);
             });
@@ -3855,6 +3722,88 @@
                     }
                 }
             });
+            
+            // Growth Chart
+            const growthCtx = document.getElementById('growth-chart').getContext('2d');
+            new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                    datasets: [{
+                        label: 'Growth Rate (cm)',
+                        data: [5, 12, 20, 28, 35, 42],
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Disease Trend Chart
+            const diseaseTrendCtx = document.getElementById('disease-trend-chart').getContext('2d');
+            new Chart(diseaseTrendCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Disease Cases',
+                        data: [5, 8, 12, 15, 10, 7],
+                        backgroundColor: 'rgba(244, 67, 54, 0.7)',
+                        borderColor: 'rgba(244, 67, 54, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Expense Chart
+            const expenseCtx = document.getElementById('expense-chart').getContext('2d');
+            new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Seeds', 'Fertilizers', 'Labor', 'Equipment', 'Irrigation'],
+                    datasets: [{
+                        data: [25, 20, 30, 15, 10],
+                        backgroundColor: [
+                            'rgba(46, 125, 50, 0.7)',
+                            'rgba(76, 175, 80, 0.7)',
+                            'rgba(139, 195, 74, 0.7)',
+                            'rgba(205, 220, 57, 0.7)',
+                            'rgba(255, 235, 59, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(46, 125, 50, 1)',
+                            'rgba(76, 175, 80, 1)',
+                            'rgba(139, 195, 74, 1)',
+                            'rgba(205, 220, 57, 1)',
+                            'rgba(255, 235, 59, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
         }
 
         // Load user location
@@ -3913,8 +3862,8 @@
                             <div>Moisture Level: Optimal</div>
                             <div>Temperature: Normal</div>
                         </div>
-                        <button class="btn btn-primary" style="margin-top: 15px;" onclick="captureSoilImage()">
-                            <i class="fas fa-camera"></i> Capture Soil Image
+                        <button class="btn btn-primary" style="margin-top: 15px;" onclick="analyzeSoil()">
+                            <i class="fas fa-search"></i> Analyze Soil
                         </button>
                     </div>
                 `;
@@ -3923,9 +3872,15 @@
             }, 2000);
         }
 
-        function captureSoilImage() {
-            showNotification('Soil image captured and analyzed');
-            // In a real application, this would capture and analyze soil image
+        function analyzeSoil() {
+            showLoading(true);
+            
+            // Simulate soil analysis
+            setTimeout(() => {
+                document.getElementById('soil-analysis-results').style.display = 'block';
+                showLoading(false);
+                showNotification('Soil analysis completed');
+            }, 3000);
         }
 
         // Save irrigation schedule
@@ -3933,8 +3888,45 @@
             const schedule = document.getElementById('irrigation-schedule').value;
             if (schedule) {
                 showNotification(`Irrigation schedule saved for ${new Date(schedule).toLocaleString()}`);
+                
+                // Schedule notification for irrigation time
+                const scheduleTime = new Date(schedule).getTime();
+                const currentTime = new Date().getTime();
+                const timeUntilSchedule = scheduleTime - currentTime;
+                
+                if (timeUntilSchedule > 0) {
+                    setTimeout(() => {
+                        // Play notification sound
+                        playNotificationSound();
+                        showNotification('Time to irrigate your crops!', 'info');
+                    }, timeUntilSchedule);
+                }
             } else {
                 showNotification('Please select a date and time for irrigation', 'error');
+            }
+        }
+
+        // Play notification sound
+        function playNotificationSound() {
+            // Create audio context for notification sound
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.1;
+                
+                oscillator.start();
+                setTimeout(() => {
+                    oscillator.stop();
+                }, 500);
+            } catch (e) {
+                console.log('Audio context not supported:', e);
             }
         }
 
@@ -3967,9 +3959,21 @@
             Object.keys(appData.remedies).forEach(disease => {
                 const remedies = appData.remedies[disease];
                 
-                // Add natural remedies (show first 3 from each disease)
-                remedies.natural.slice(0, 3).forEach(remedy => {
+                // Add natural remedies
+                remedies.natural.forEach(remedy => {
                     const card = createRemedyCard(remedy, 'natural');
+                    container.appendChild(card);
+                });
+                
+                // Add bio pesticides
+                remedies.bioPesticides.forEach(pesticide => {
+                    const card = createRemedyCard(pesticide, 'bioPesticide');
+                    container.appendChild(card);
+                });
+                
+                // Add bio fertilizers
+                remedies.bioFertilizers.forEach(fertilizer => {
+                    const card = createRemedyCard(fertilizer, 'bioFertilizer');
                     container.appendChild(card);
                 });
             });
@@ -4412,6 +4416,40 @@
             }, 1500);
         }
 
+        function googleLogin() {
+            showLoading(true);
+            // Simulate Google login
+            setTimeout(() => {
+                appData.currentUser = {
+                    name: 'Google User',
+                    username: 'google_user',
+                    email: 'google_user@example.com'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(appData.currentUser));
+                updateUserInterface();
+                hideAuthModal();
+                showLoading(false);
+                showNotification('Google login successful! Welcome to AgriSmart Adviser');
+            }, 1500);
+        }
+
+        function facebookLogin() {
+            showLoading(true);
+            // Simulate Facebook login
+            setTimeout(() => {
+                appData.currentUser = {
+                    name: 'Facebook User',
+                    username: 'facebook_user',
+                    email: 'facebook_user@example.com'
+                };
+                localStorage.setItem('currentUser', JSON.stringify(appData.currentUser));
+                updateUserInterface();
+                hideAuthModal();
+                showLoading(false);
+                showNotification('Facebook login successful! Welcome to AgriSmart Adviser');
+            }, 1500);
+        }
+
         function logoutUser() {
             appData.currentUser = null;
             localStorage.removeItem('currentUser');
@@ -4532,19 +4570,13 @@
         function showNotification(message, type = 'success') {
             // Create notification element
             const notification = document.createElement('div');
-            notification.className = `alert alert-${type}`;
-            notification.style.position = 'fixed';
-            notification.style.top = '20px';
-            notification.style.right = '20px';
-            notification.style.zIndex = '10000';
-            notification.style.minWidth = '300px';
-            notification.style.maxWidth = '500px';
+            notification.className = `notification ${type}`;
             notification.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 ${message}
             `;
             
-            document.body.appendChild(notification);
+            document.getElementById('notification-container').appendChild(notification);
             
             // Remove notification after 5 seconds
             setTimeout(() => {
